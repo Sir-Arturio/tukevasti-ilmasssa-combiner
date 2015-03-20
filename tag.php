@@ -60,6 +60,18 @@ foreach($combined as $line) {
 }
 fclose($fp);
 
+// Analyze missing files
+foreach($combined as $key => $item) {
+  if(empty($item[0])) {
+    echo "FILE " . $item[2] . " MISSING. ";
+    echo "PREV FILE: " . prev($combined)[0] ." ";
+    next($combined);
+    echo "NEXT FILE: " . next($combined)[0] ." ";
+    echo "\n";
+  }
+}
+array_walk($combined, function($a) { if(empty($a[0])) echo "FILE " . $a[2] . " MISSING. PREV FILE "; });
+
 
 
 
