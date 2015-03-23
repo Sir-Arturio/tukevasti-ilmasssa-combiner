@@ -1,7 +1,53 @@
 <?php
 
-$files = scandir('.');
-$files = array_filter($files, function ($file) { return preg_match('|.mp3$|', $file); });
+function read_tags_and_combine_to_csv() {
+  $files = scandir('.');
+  $files = array_filter($files, function ($file) { return preg_match('|.mp3$|', $file); });
+
+  $file_data = array_map("process_file", $files);
+  //$file_dates = array_filter($file_dates, function($val) { return ($val[1] == '00-00-0000');});
+  // print_r($file_dates);
+
+  $matches = read_wiki_content();
+  //print_r(array_pop($matches));
+
+  //echo "FILES: " . count($file_dates) ." WIKI: " . count($matches) ." \n";
+
+  $file_dates = array_map(function ($a) { return $a[1]; }, $file_data);
+  //print_r($file_dates);
+
+  $non_matching_matches = array_filter($matches, function ($a) use($file_dates) { return !in_array($a[1], $file_dates); });
+  print_r($non_matching_matches);
+  echo "NON MATCHING COUNT: " . count($non_matching_matches) ." \n";
+
+  // COMBINE DATA
+  $combined = array();
+  foreach($file_data as $item) {
+    $combined[$item[1]] = $item;
+  }
+  foreach($matches as $item) {
+    $combined[$item[1]] = (array_key_exists($item[1], $combined)) ? array_merge($combined[$item[1]], $item) : array_merge(array(null, null), $item);
+  }
+  ksort($combined);
+
+  $fp = fopen('ti.csv', 'w');
+  foreach($combined as $line) {
+    fputcsv($fp, $line);
+  }
+  fclose($fp);
+
+  // Analyze missing files
+  foreach($combined as $key => $item) {
+    if(empty($item[0])) {
+      echo "FILE " . $item[2] . " MISSING. ";
+      echo "PREV FILE: " . prev($combined)[0] ." ";
+      next($combined);
+      echo "NEXT FILE: " . next($combined)[0] ." ";
+      echo "\n";
+    }
+  }
+  array_walk($combined, function($a) { if(empty($a[0])) echo "FILE " . $a[2] . " MISSING. PREV FILE "; });
+}
 
 function get_date_from_filename($filename) {
   $exceptions = array('201306010' => '20130610');
@@ -27,51 +73,6 @@ function get_date_from_filename($filename) {
 function process_file($filename) {
   return array($filename, get_date_from_filename($filename));
 }
-
-$file_data = array_map("process_file", $files);
-//$file_dates = array_filter($file_dates, function($val) { return ($val[1] == '00-00-0000');});
-// print_r($file_dates);
-
-$matches = read_wiki_content();
-//print_r(array_pop($matches));
-
-//echo "FILES: " . count($file_dates) ." WIKI: " . count($matches) ." \n";
-
-$file_dates = array_map(function ($a) { return $a[1]; }, $file_data);
-//print_r($file_dates);
-
-$non_matching_matches = array_filter($matches, function ($a) use($file_dates) { return !in_array($a[1], $file_dates); });
-print_r($non_matching_matches);
-echo "NON MATCHING COUNT: " . count($non_matching_matches) ." \n";
-
-// COMBINE DATA
-$combined = array();
-foreach($file_data as $item) {
-  $combined[$item[1]] = $item;
-}
-foreach($matches as $item) {
-  $combined[$item[1]] = (array_key_exists($item[1], $combined)) ? array_merge($combined[$item[1]], $item) : array_merge(array(null, null), $item);
-}
-ksort($combined);
-
-$fp = fopen('ti.csv', 'w');
-foreach($combined as $line) {
-  fputcsv($fp, $line);
-}
-fclose($fp);
-
-// Analyze missing files
-foreach($combined as $key => $item) {
-  if(empty($item[0])) {
-    echo "FILE " . $item[2] . " MISSING. ";
-    echo "PREV FILE: " . prev($combined)[0] ." ";
-    next($combined);
-    echo "NEXT FILE: " . next($combined)[0] ." ";
-    echo "\n";
-  }
-}
-array_walk($combined, function($a) { if(empty($a[0])) echo "FILE " . $a[2] . " MISSING. PREV FILE "; });
-
 
 
 
