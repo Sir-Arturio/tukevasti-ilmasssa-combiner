@@ -1,5 +1,12 @@
 {
     "require-dev": {
         "phpunit/phpunit": "4.5.*"
+    },
+
+    "autoload": {
+      "files": [
+          "wiki.php",
+          "tag.php"
+      ]
     }
 }
