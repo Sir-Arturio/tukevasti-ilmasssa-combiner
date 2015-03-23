@@ -32,7 +32,7 @@ $file_data = array_map("process_file", $files);
 //$file_dates = array_filter($file_dates, function($val) { return ($val[1] == '00-00-0000');});
 // print_r($file_dates);
 
-include "wiki.php";
+$matches = read_wiki_content();
 //print_r(array_pop($matches));
 
 //echo "FILES: " . count($file_dates) ." WIKI: " . count($matches) ." \n";
