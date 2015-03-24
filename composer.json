@@ -8,9 +8,10 @@
     },
 
     "autoload": {
-      "files": [
+        "psr-4": {"TukevastiIlmassaDataCombiner\\": "src/"},
+        "files": [
           "wiki.php",
           "tag.php"
-      ]
+        ]
     }
 }
