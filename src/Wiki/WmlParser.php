@@ -1,7 +1,8 @@
 <?php
 
-
 namespace TukevastiIlmassaDataCombiner\Wiki;
+
+use DateTime;
 
 class WmlParser
 {
@@ -19,7 +20,7 @@ class WmlParser
       $cells = array_filter($cells, function ($cell) { return preg_match('/\|\|/', $cell); });
       $cells = preg_replace('/\|\|\s*/', '', $cells);
       if(isset($cells[1]) && count($cells) >= 3) {
-        $cells[1] = prepare_date($cells[1]);
+        $cells[1] = $this->prepare_date($cells[1]);
       }
       $row = $cells;
     }
@@ -28,14 +29,13 @@ class WmlParser
     $matches = array_filter($matches, function($a) { return (is_object($a[1])) ? true : false; });
     $matches = array_filter($matches, function($a) { return ($a[2] == 'Uusinta edellisestä') ? false : true; });
     usort($matches, 'sort_by_date');
-    $matches = array_map(function($a) { $a[1] = flatten_date($a[1]); return $a; }, $matches);
-    print_r($matches);
+    $matches = array_map(function($a) { $a[1] = $this->flatten_date($a[1]); return $a; }, $matches);
     return $matches;
   }
 
   function sort_by_date($a, $b) {
-    $a = flatten_date($a[1]);
-    $b = flatten_date($b[1]);
+    $a = $this->flatten_date($a[1]);
+    $b = $this->flatten_date($b[1]);
     return strcmp($a, $b);
   }
 
