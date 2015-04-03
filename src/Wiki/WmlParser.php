@@ -28,12 +28,12 @@ class WmlParser
     $matches = array_filter($matches);
     $matches = array_filter($matches, function($a) { return (is_object($a[1])) ? true : false; });
     $matches = array_filter($matches, function($a) { return ($a[2] == 'Uusinta edellisestä') ? false : true; });
-    usort($matches, 'sort_by_date');
+    usort($matches, array($this, 'sort_by_date'));
     $matches = array_map(function($a) { $a[1] = $this->flatten_date($a[1]); return $a; }, $matches);
     return $matches;
   }
 
-  function sort_by_date($a, $b) {
+  protected function sort_by_date($a, $b) {
     $a = $this->flatten_date($a[1]);
     $b = $this->flatten_date($b[1]);
     return strcmp($a, $b);
