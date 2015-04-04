@@ -38,6 +38,14 @@ class WmlParserTest extends PHPUnit_Framework_TestCase
 || 2056
 || &nbsp;
 |}
+
+=== Kevät 2007 ===
+{|
+!| [[11. kesäkuuta]] [[2007]]
+|| Muuttaminen
+|| Muuttopitsa, tavara
+|| J.Relander ja T.Nevanlinna
+|}
 ';
         $expected = array(
           array(
@@ -59,6 +67,12 @@ class WmlParserTest extends PHPUnit_Framework_TestCase
             1 => '2006-12-11',
             '2056',
             '',
+          ),
+          array(
+            1 => '2007-06-11',
+            'Muuttaminen',
+            'Muuttopitsa, tavara',
+            'J.Relander ja T.Nevanlinna'
           ),
         );
 
