@@ -1,23 +1,11 @@
 <?php
 
-function read_tags_and_combine_to_csv($files, $wikiData) {
-
-  $file_dates = array_map(function ($a) { return $a[1]; }, $files);
-  //print_r($file_dates);
-
-  $non_matching_matches = array_filter($wikiData, function ($a) use($file_dates) { return !in_array($a[1], $file_dates); });
-  print_r($non_matching_matches);
-  echo "NON MATCHING COUNT: " . count($non_matching_matches) ." \n";
-
-  // COMBINE DATA
-  $combined = array();
-  foreach($files as $item) {
-    $combined[$item[1]] = $item;
-  }
-  foreach($wikiData as $item) {
-    $combined[$item[1]] = (array_key_exists($item[1], $combined)) ? array_merge($combined[$item[1]], $item) : array_merge(array(null, null), $item);
-  }
-  ksort($combined);
+function read_tags_and_combine_to_csv($combined) {
+    // SHOW NON-MATCHING ELEMENTS
+    /*$file_dates = array_map(function ($a) { return $a[1]; }, $files);
+    $non_matching_matches = array_filter($wikiData, function ($a) use($file_dates) { return !in_array($a[1], $file_dates); });
+    print_r($non_matching_matches);
+    echo "NON MATCHING COUNT: " . count($non_matching_matches) ." \n";*/
 
   $fp = fopen('ti.csv', 'w');
   foreach($combined as $line) {
@@ -26,7 +14,7 @@ function read_tags_and_combine_to_csv($files, $wikiData) {
   fclose($fp);
 
   // Analyze missing files
-  foreach($combined as $key => $item) {
+  /*foreach($combined as $key => $item) {
     if(empty($item[0])) {
       echo "FILE " . $item[2] . " MISSING. ";
       echo "PREV FILE: " . prev($combined)[0] ." ";
@@ -34,8 +22,8 @@ function read_tags_and_combine_to_csv($files, $wikiData) {
       echo "NEXT FILE: " . next($combined)[0] ." ";
       echo "\n";
     }
-  }
-  array_walk($combined, function($a) { if(empty($a[0])) echo "FILE " . $a[2] . " MISSING. PREV FILE "; });
+  }*/
+  //array_walk($combined, function($a) { if(empty($a[0])) echo "FILE " . $a[2] . " MISSING. PREV FILE "; });
 }
 
 function date_differ($a, $b) {

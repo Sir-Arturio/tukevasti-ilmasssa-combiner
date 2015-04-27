@@ -5,6 +5,7 @@ namespace TukevastiIlmassaDataCombiner\Console\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use TukevastiIlmassaDataCombiner\Combiner\WikiFileCombiner;
 use TukevastiIlmassaDataCombiner\File\DirectoryListingParser;
 use TukevastiIlmassaDataCombiner\Wiki\WmlParser;
 
@@ -26,6 +27,9 @@ class RunCommand extends Command
         $fileParser = new DirectoryListingParser();
         $files = $fileParser->parse($rawFiles);
 
-        read_tags_and_combine_to_csv($files, $wikiData);
+        $combiner = new WikiFileCombiner();
+        $result = $combiner->combine($wikiData, $files);
+
+        read_tags_and_combine_to_csv($result);
     }
 }
