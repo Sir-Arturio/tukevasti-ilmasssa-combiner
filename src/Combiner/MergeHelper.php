@@ -7,6 +7,30 @@ use DateTime;
 class MergeHelper
 {
     public function mergeItems($item, $item2) {
+        $items = array($item, $item2);
+
+        // Check for asymmetric data.
+        $wikiCount = 0;
+        $fileCount = 0;
+        foreach($items as $subItem) {
+            if($this->hasWikiData($subItem)) {
+                $wikiCount++;
+            }
+            if($this->hasFileMetaData($subItem)) {
+                $fileCount++;
+            }
+
+            // Item containing both data structures cannot be merged.
+            if($this->hasWikiData($subItem) && $this->hasFileMetaData($subItem)) {
+                return false;
+            }
+        }
+
+        // Fail if data is not asymmetric.
+        if($wikiCount != 1 || $fileCount != 1) {
+            return false;
+        }
+
         // Select data hosts.
         $file = $this->hasFileMetaData($item) ? $item : $item2;
         $wiki = $this->hasWikiData($item) ? $item : $item2;

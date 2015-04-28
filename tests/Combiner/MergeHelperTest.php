@@ -28,7 +28,7 @@ class MergeHelperTest extends PHPUnit_Framework_TestCase
               'Wiki merge',
               'Test',
             ),
-            'Items with asymmetrical data with adjacent date are merged.'
+            'Items with asymmetrical data with adjacent dates are merged.'
           ),
 
           array(
@@ -41,7 +41,7 @@ class MergeHelperTest extends PHPUnit_Framework_TestCase
               'Wiki merge',
               'Test',
             ),
-            'Items with REVERSED asymmetrical data with adjacent date are merged.'
+            'Items with REVERSED asymmetrical data with adjacent dates are merged.'
           ),
 
           array(
@@ -61,7 +61,47 @@ class MergeHelperTest extends PHPUnit_Framework_TestCase
             array(0 => null,  1 => null, '2006-01-01', 'Wiki merge', 'Test',),
             array('20060102_tukevasti_ilmassa.mp3', '2011-11-11'),
             false,
-            'Items with asymmetrical data WITHOUT adjacent date are NOT merged.'
+            'Items with asymmetrical data WITHOUT adjacent dates are NOT merged.'
+          ),
+
+          array(
+            array(0 => null,  1 => null, '2006-01-01', 'Wiki merge', 'Test',),
+            array(0 => null,  1 => null, '2006-01-01', 'Wiki merge', 'Test',),
+            false,
+            'Items with NON-asymmetrical (both wiki-only) data with adjacent dates are NOT merged.'
+          ),
+
+          array(
+            array('20060102_tukevasti_ilmassa.mp3', '2011-11-11'),
+            array('20060102_tukevasti_ilmassa.mp3', '2011-11-11'),
+            false,
+            'Items with NON-asymmetrical (both file-only) data with adjacent dates are NOT merged.'
+          ),
+
+          array(
+            array(),
+            array(),
+            false,
+            'Items with NON-asymmetrical (both empty) data with adjacent dates are NOT merged.'
+          ),
+
+          array(
+            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24', '2006-01-24', 'Wiki merge', 'Test',),
+            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24', '2006-01-24', 'Wiki merge', 'Test',),
+            false,
+            'Items with NON-asymmetrical (both full) data with adjacent dates are NOT merged.'
+          ),
+          array(
+            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24', '2006-01-24', 'Wiki merge', 'Test',),
+            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24'),
+            false,
+            'Items with NON-asymmetrical (another full) data with adjacent dates are NOT merged.'
+          ),
+          array(
+            array(),
+            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24', '2006-01-24', 'Wiki merge', 'Test',),
+            false,
+            'Items with truly asymmetrical data are NOT merged.'
           ),
         );
     }
