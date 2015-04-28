@@ -8,6 +8,45 @@ use PHPUnit_Framework_TestCase,
 class MergeHelperTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * @dataProvider mergeItemProvider
+     */
+    public function testMergeItems($item, $item2, $expected, $message) {
+        $helper = new MergeHelper();
+        $result = $helper->mergeItems($item, $item2);
+        $this->assertEquals($expected, $result, $message);
+    }
+
+    public function mergeItemProvider() {
+        return array(
+          array(
+            array(0 => null,  1 => null, '2006-01-23', 'Wiki merge', 'Test',),
+            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24'),
+            array(
+              '20060124_tukevasti_ilmassa.mp3',
+              '2006-01-24',
+              '2006-01-23',
+              'Wiki merge',
+              'Test',
+            ),
+            'Items with asymmetrical data with adjacent date are merged.'
+          ),
+
+          array(
+            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24'),
+            array(0 => null,  1 => null, '2006-01-23', 'Wiki merge', 'Test',),
+            array(
+              '20060124_tukevasti_ilmassa.mp3',
+              '2006-01-24',
+              '2006-01-23',
+              'Wiki merge',
+              'Test',
+            ),
+            'Items with REVERSED asymmetrical data with adjacent date are merged.'
+          ),
+        );
+    }
+
+    /**
      * @dataProvider dateProvider
      */
     public function testAdjacentDate($date, $date2, $expected, $message) {
