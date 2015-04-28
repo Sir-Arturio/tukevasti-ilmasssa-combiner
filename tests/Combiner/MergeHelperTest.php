@@ -43,6 +43,26 @@ class MergeHelperTest extends PHPUnit_Framework_TestCase
             ),
             'Items with REVERSED asymmetrical data with adjacent date are merged.'
           ),
+
+          array(
+            array(0 => null,  1 => null, '2006-01-24', 'Wiki merge', 'Test',),
+            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24'),
+            array(
+              '20060124_tukevasti_ilmassa.mp3',
+              '2006-01-24',
+              '2006-01-24',
+              'Wiki merge',
+              'Test',
+            ),
+            'Items with asymmetrical data with SAME date are merged.'
+          ),
+
+          array(
+            array(0 => null,  1 => null, '2006-01-01', 'Wiki merge', 'Test',),
+            array('20060102_tukevasti_ilmassa.mp3', '2011-11-11'),
+            false,
+            'Items with asymmetrical data WITHOUT adjacent date are NOT merged.'
+          ),
         );
     }
 
