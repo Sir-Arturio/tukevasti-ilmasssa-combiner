@@ -5,6 +5,7 @@ namespace TukevastiIlmassaDataCombiner\Console\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use TukevastiIlmassaDataCombiner\Combiner\MergeHelper;
 use TukevastiIlmassaDataCombiner\Combiner\WikiFileCombiner;
 use TukevastiIlmassaDataCombiner\File\DirectoryListingParser;
 use TukevastiIlmassaDataCombiner\Wiki\WmlParser;
@@ -29,6 +30,7 @@ class RunCommand extends Command
 
         $combiner = new WikiFileCombiner();
         $result = $combiner->combine($wikiData, $files);
+        $result = $combiner->merge($result, new MergeHelper());
 
         read_tags_and_combine_to_csv($result);
     }
