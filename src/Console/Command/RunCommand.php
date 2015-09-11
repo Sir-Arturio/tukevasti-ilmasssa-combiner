@@ -8,6 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TukevastiIlmassaDataCombiner\Combiner\MergeHelper;
 use TukevastiIlmassaDataCombiner\Combiner\WikiFileCombiner;
 use TukevastiIlmassaDataCombiner\File\DirectoryListingParser;
+use TukevastiIlmassaDataCombiner\Media\Mp3Writer;
 use TukevastiIlmassaDataCombiner\Wiki\WmlParser;
 
 class RunCommand extends Command
@@ -33,5 +34,8 @@ class RunCommand extends Command
         $result = $combiner->merge($result, new MergeHelper());
 
         read_tags_and_combine_to_csv($result);
+
+        $fileWriter = new Mp3Writer();
+        $fileWriter->writeData($result);
     }
 }
