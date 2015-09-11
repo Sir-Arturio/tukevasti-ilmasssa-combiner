@@ -3,6 +3,7 @@
 namespace TukevastiIlmassaDataCombiner\File;
 
 use PHPUnit_Framework_TestCase;
+use DateTime;
 
 class DirectoryListingParserTest extends PHPUnit_Framework_TestCase
 {
@@ -17,20 +18,25 @@ class DirectoryListingParserTest extends PHPUnit_Framework_TestCase
           '.git',
           'text.txt',
           '20080303_tukevasti.mp3',
+          'tukevasti_ilmassa_without_a_date.mp3',
         );
 
         $expected = array(
-          array(
+          new FileData(
             '20010319_tukevasti_ilmassa.mp3',
-            '2001-03-19',
+            new DateTime('2001-03-19')
           ),
-          array(
+          new FileData(
             '20070910_tukevasti.mp3',
-            '2007-09-10',
+            new DateTime('2007-09-10')
           ),
-          array(
+          new FileData(
             '20080303_tukevasti.mp3',
-            '2008-03-03',
+            new DateTime('2008-03-03')
+          ),
+          new FileData(
+            'tukevasti_ilmassa_without_a_date.mp3',
+            null
           ),
         );
 
