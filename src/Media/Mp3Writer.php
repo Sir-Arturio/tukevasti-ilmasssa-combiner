@@ -19,14 +19,20 @@ class Mp3Writer
      */
     public function writeInfoToFile(array $item)
     {
+        if(!isset($item[0])) {
+            return FALSE;
+        }
         $artist = $this->getArtistData($item);
         $title = $this->getTitleData($item);
 
         // Remove ID3v1 tags.
-        $id3v1 = new \Zend_Media_Id3v1($item[0]);
-        $id3v1->setArtist("");
-        $id3v1->setTitle("");
-        $id3v1->write();
+        try {
+            $id3v1 = new \Zend_Media_Id3v1($item[0]);
+            $id3v1->setArtist("");
+            $id3v1->setTitle("");
+            $id3v1->write();
+        }
+        catch(\Exception $e) {}
 
         // Add ID3v2 tags.
         $id3 = new \Zend_Media_Id3v2();
