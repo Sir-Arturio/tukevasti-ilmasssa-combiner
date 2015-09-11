@@ -3,6 +3,7 @@
 namespace TukevastiIlmassaDataCombiner\Wiki;
 
 use PHPUnit_Framework_TestCase;
+use DateTime;
 
 class WmlParserTest extends PHPUnit_Framework_TestCase
 {
@@ -48,28 +49,28 @@ class WmlParserTest extends PHPUnit_Framework_TestCase
 |}
 ';
         $expected = array(
-          array(
-            1 => '2001-03-05',
+          new WikiEpisodeInfo(
+            new DateTime('2001-03-05'),
             'Ensimmäinen lähetys',
-            '',
+            ''
           ),
-          array(
-            1 => '2001-03-19',
+          new WikiEpisodeInfo(
+            new DateTime('2001-03-19'),
             'Hyvinvointivaltio',
-            '',
+            ''
           ),
-          array(
-            1 => '2006-12-04',
+          new WikiEpisodeInfo(
+            new DateTime('2006-12-04'),
             'Kalenteri',
-            'perisynti, bilekalenteri',
+            'perisynti, bilekalenteri'
           ),
-          array(
-            1 => '2006-12-11',
+          new WikiEpisodeInfo(
+            new DateTime('2006-12-11'),
             '2056',
-            '',
+            ''
           ),
-          array(
-            1 => '2007-06-11',
+          new WikiEpisodeInfo(
+            new DateTime('2007-06-11'),
             'Muuttaminen',
             'Muuttopitsa, tavara',
             'J.Relander ja T.Nevanlinna'
