@@ -2,26 +2,28 @@
 
 namespace TukevastiIlmassaDataCombiner\File;
 
+use DateTime;
+
 class FileData
 {
     /** @var string $filename */
     protected $fileName;
 
-    /** @var \DateTime|null $date */
+    /** @var DateTime|null $date */
     protected $date;
 
     /**
      * @param $fileName
-     * @param \DateTime|null $date
+     * @param DateTime|null $date
      */
-    public function __construct($fileName, \DateTime $date = null)
+    public function __construct($fileName, DateTime $date = null)
     {
         $this->fileName = $fileName;
         $this->date = $date;
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getDate()
     {
@@ -29,9 +31,9 @@ class FileData
     }
 
     /**
-     * @param \DateTime|null $date
+     * @param DateTime|null $date
      */
-    public function setDate(\DateTime $date = null)
+    public function setDate(DateTime $date = null)
     {
         $this->date = $date;
     }
