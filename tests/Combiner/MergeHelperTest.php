@@ -2,8 +2,10 @@
 
 namespace TukevastiIlmassaDataCombiner\Combiner;
 
-use PHPUnit_Framework_TestCase,
-    DateTime;
+use DateTime;
+use PHPUnit_Framework_TestCase;
+use TukevastiIlmassaDataCombiner\File\FileData;
+use TukevastiIlmassaDataCombiner\Wiki\WikiEpisodeInfo;
 
 class MergeHelperTest extends PHPUnit_Framework_TestCase
 {
@@ -18,90 +20,20 @@ class MergeHelperTest extends PHPUnit_Framework_TestCase
 
     public function mergeItemProvider() {
         return array(
-          array(
-            array(0 => null,  1 => null, '2006-01-23', 'Wiki merge', 'Test',),
-            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24'),
             array(
-              '20060124_tukevasti_ilmassa.mp3',
-              '2006-01-24',
-              '2006-01-23',
-              'Wiki merge',
-              'Test',
+                new FileData('20060124_tukevasti_ilmassa.mp3', new DateTime('2006-01-24')),
+                new WikiEpisodeInfo(new DateTime('2006-01-23'), 'Wiki merge', 'Test'),
+                new MergedEpisode(
+                    new FileData('20060124_tukevasti_ilmassa.mp3', new DateTime('2006-01-24')),
+                    new WikiEpisodeInfo(new DateTime('2006-01-23'), 'Wiki merge', 'Test')
+                ),
+                'Items with the same date are merged.'
             ),
-            'Items with asymmetrical data with adjacent dates are merged.'
-          ),
-
-          array(
-            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24'),
-            array(0 => null,  1 => null, '2006-01-23', 'Wiki merge', 'Test',),
             array(
-              '20060124_tukevasti_ilmassa.mp3',
-              '2006-01-24',
-              '2006-01-23',
-              'Wiki merge',
-              'Test',
-            ),
-            'Items with REVERSED asymmetrical data with adjacent dates are merged.'
-          ),
-
-          array(
-            array(0 => null,  1 => null, '2006-01-24', 'Wiki merge', 'Test',),
-            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24'),
-            array(
-              '20060124_tukevasti_ilmassa.mp3',
-              '2006-01-24',
-              '2006-01-24',
-              'Wiki merge',
-              'Test',
-            ),
-            'Items with asymmetrical data with SAME date are merged.'
-          ),
-
-          array(
-            array(0 => null,  1 => null, '2006-01-01', 'Wiki merge', 'Test',),
-            array('20060102_tukevasti_ilmassa.mp3', '2011-11-11'),
-            false,
-            'Items with asymmetrical data WITHOUT adjacent dates are NOT merged.'
-          ),
-
-          array(
-            array(0 => null,  1 => null, '2006-01-01', 'Wiki merge', 'Test',),
-            array(0 => null,  1 => null, '2006-01-01', 'Wiki merge', 'Test',),
-            false,
-            'Items with NON-asymmetrical (both wiki-only) data with adjacent dates are NOT merged.'
-          ),
-
-          array(
-            array('20060102_tukevasti_ilmassa.mp3', '2011-11-11'),
-            array('20060102_tukevasti_ilmassa.mp3', '2011-11-11'),
-            false,
-            'Items with NON-asymmetrical (both file-only) data with adjacent dates are NOT merged.'
-          ),
-
-          array(
-            array(),
-            array(),
-            false,
-            'Items with NON-asymmetrical (both empty) data with adjacent dates are NOT merged.'
-          ),
-
-          array(
-            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24', '2006-01-24', 'Wiki merge', 'Test',),
-            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24', '2006-01-24', 'Wiki merge', 'Test',),
-            false,
-            'Items with NON-asymmetrical (both full) data with adjacent dates are NOT merged.'
-          ),
-          array(
-            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24', '2006-01-24', 'Wiki merge', 'Test',),
-            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24'),
-            false,
-            'Items with NON-asymmetrical (another full) data with adjacent dates are NOT merged.'
-          ),
-          array(
-            array(),
-            array('20060124_tukevasti_ilmassa.mp3', '2006-01-24', '2006-01-24', 'Wiki merge', 'Test',),
-            false,
-            'Items with truly asymmetrical data are NOT merged.'
+                new FileData('20060129_tukevasti_ilmassa.mp3', new DateTime('2006-01-29')),
+                new WikiEpisodeInfo(new DateTime('2006-01-23'), 'Wiki merge', 'Test'),
+                false,
+                'Items with nonadjacent date are not merged.'
           ),
         );
     }
