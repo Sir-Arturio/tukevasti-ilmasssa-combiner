@@ -9,7 +9,7 @@ use TukevastiIlmassaDataCombiner\Wiki\WikiEpisodeInfo;
 class MergeHelper
 {
     /**
-     * Merge items if dates are adjacent.
+     * Merge items if dates are same or adjacent.
      *
      * @param FileData $file
      * @param WikiEpisodeInfo $wiki
@@ -17,9 +17,12 @@ class MergeHelper
      */
     public function mergeItems(FileData $file, WikiEpisodeInfo $wiki)
     {
-        if($this->isAdjacentDate($file->getDate(), $wiki->getDate())) {
+        if ($file->getDate() == $wiki->getDate() ||
+          $this->isAdjacentDate($file->getDate(), $wiki->getDate())
+        ) {
             return new MergedEpisode($file, $wiki);
         }
+
         return false;
     }
 

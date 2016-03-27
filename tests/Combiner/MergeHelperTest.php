@@ -20,14 +20,24 @@ class MergeHelperTest extends PHPUnit_Framework_TestCase
 
     public function mergeItemProvider() {
         return array(
-            array(
+          array(
+            new FileData('20060124_tukevasti_ilmassa.mp3', new DateTime('2006-01-24')),
+            new WikiEpisodeInfo(new DateTime('2006-01-24'), 'Wiki merge', 'Test'),
+            new MergedEpisode(
+              new FileData('20060124_tukevasti_ilmassa.mp3', new DateTime('2006-01-24')),
+              new WikiEpisodeInfo(new DateTime('2006-01-24'), 'Wiki merge', 'Test')
+            ),
+            'Items with the same date are merged.'
+          ),
+
+          array(
                 new FileData('20060124_tukevasti_ilmassa.mp3', new DateTime('2006-01-24')),
                 new WikiEpisodeInfo(new DateTime('2006-01-23'), 'Wiki merge', 'Test'),
                 new MergedEpisode(
                     new FileData('20060124_tukevasti_ilmassa.mp3', new DateTime('2006-01-24')),
                     new WikiEpisodeInfo(new DateTime('2006-01-23'), 'Wiki merge', 'Test')
                 ),
-                'Items with the same date are merged.'
+                'Items with the adjacent date are merged.'
             ),
             array(
                 new FileData('20060129_tukevasti_ilmassa.mp3', new DateTime('2006-01-29')),
