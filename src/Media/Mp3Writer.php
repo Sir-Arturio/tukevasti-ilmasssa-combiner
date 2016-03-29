@@ -96,7 +96,7 @@ class Mp3Writer
         $file = $episode->getFileData();
         $wiki = $episode->getWikiEpisodeInfo();
         $title[] = $wiki ? $wiki->getDate()->format("Y-m-d") : $file->getDate()->format("Y-m-d");
-        $title[] = $wiki && $wiki->getTitle() ? $wiki->getTitle() : "Tukevasti Ilmassa";
+        $title[] = $wiki && $wiki->getTitle() ? ucfirst($wiki->getTitle()) : "Tukevasti Ilmassa";
         return implode(' - ', $title);
     }
 } 

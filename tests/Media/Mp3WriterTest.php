@@ -117,6 +117,21 @@ class Mp3WriterTest extends PHPUnit_Framework_TestCase
             '2006-01-23 - Tukevasti Ilmassa',
             'Episodes with WikiData but without a title field return "<wikiDate> - Tukevasti Ilmassa" as a title.',
           ),
+          array(
+            new MergedEpisode(
+              new FileData(
+                '20060124_tukevasti_ilmassa.mp3', new \DateTime('2006-01-24')
+              ),
+              new WikiEpisodeInfo(
+                new \DateTime('2006-01-23'),
+                'first word capitalized',
+                'Test',
+                'J. Relander ja T. Nevanlinna'
+              )
+            ),
+            '2006-01-23 - First word capitalized',
+            'Episodes with lowercase title return "<wikiDate> - <title with the first letter capitalized>".',
+          ),
         );
     }
 }
