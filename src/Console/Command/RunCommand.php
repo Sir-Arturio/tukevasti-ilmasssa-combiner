@@ -30,12 +30,11 @@ class RunCommand extends Command
         $files = $fileParser->parse($rawFiles);
 
         $combiner = new WikiFileCombiner();
-        $result = $combiner->combine($wikiData, $files);
-        $result = $combiner->merge($result, new MergeHelper());
+        $mergedEpisodes = $combiner->combine($wikiData, $files, new MergeHelper());
 
-        read_tags_and_combine_to_csv($result);
+        read_tags_and_combine_to_csv($mergedEpisodes);
 
         $fileWriter = new Mp3Writer();
-        $fileWriter->writeData($result);
+        $fileWriter->writeData($mergedEpisodes);
     }
 }

@@ -1,6 +1,11 @@
 <?php
 
-function read_tags_and_combine_to_csv($combined) {
+use TukevastiIlmassaDataCombiner\Combiner\MergedEpisode;
+
+/**
+ * @param MergedEpisode[] $episodes
+ */
+function read_tags_and_combine_to_csv(array $episodes) {
     // SHOW NON-MATCHING ELEMENTS
     /*$file_dates = array_map(function ($a) { return $a[1]; }, $files);
     $non_matching_matches = array_filter($wikiData, function ($a) use($file_dates) { return !in_array($a[1], $file_dates); });
@@ -8,8 +13,36 @@ function read_tags_and_combine_to_csv($combined) {
     echo "NON MATCHING COUNT: " . count($non_matching_matches) ." \n";*/
 
   $fp = fopen('ti.csv', 'w');
-  foreach($combined as $line) {
-    fputcsv($fp, $line);
+  foreach($episodes as $episode) {
+      $line = array();
+
+      // Flatten FileData
+      $fileData = $episode->getFileData();
+      if($fileData) {
+          $line = array_merge($line, array(
+            $fileData->getFileName(),
+            $fileData->getDate()->format("Y-m-d"),
+          ));
+      }
+      else {
+          $line = array_merge($line, array("", ""));
+      }
+
+      // Flatten WikiEpisodeInfo
+      $wiki = $episode->getWikiEpisodeInfo();
+      if($wiki) {
+          $line = array_merge($line, array(
+              $wiki->getDate()->format("Y-m-d"),
+              $wiki->getTitle(),
+              $wiki->getPresenters(),
+              $wiki->getKeywords(),
+          ));
+      }
+      else {
+          $line = array_merge($line, array("", "", "", ""));
+      }
+
+      fputcsv($fp, $line);
   }
   fclose($fp);
 
