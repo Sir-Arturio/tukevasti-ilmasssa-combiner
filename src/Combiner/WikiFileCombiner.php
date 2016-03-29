@@ -2,72 +2,57 @@
 
 namespace TukevastiIlmassaDataCombiner\Combiner;
 
+use TukevastiIlmassaDataCombiner\Wiki\WikiEpisodeInfo;
+use TukevastiIlmassaDataCombiner\File\FileData;
+
 class WikiFileCombiner
 {
     /**
-     * Combines the data from Wiki and Files together into a single element array.
+     * Combines the data from Wiki and files together into a MergedEpisode element array.
      *
-     * @param array $wikiData
-     * @param array $files
-     * @return array
-     */
-    public function combine(array $wikiData, array $files) {
-        $combined = array();
-        foreach ($files as $item) {
-            $combined[$item[1]] = $item;
-        }
-        foreach ($wikiData as $item) {
-            $combined[$item[1]] = (array_key_exists($item[1], $combined)) ? array_merge($combined[$item[1]], $item) : array_merge(array(null, null), $item);
-        }
-        ksort($combined);
-        return $combined;
-    }
-
-    /**
-     * @param array $source
+     * @param WikiEpisodeInfo[] $wikiEpisodes
+     * @param FileData[] $files
      * @param MergeHelper $helper
-     * @return array
+     * @return MergedEpisode[]
      */
-    public function merge(array $source, $helper) {
-        $result = array();
+    public function combine(array $wikiEpisodes, array $files, MergeHelper $helper) {
+        $mergedList = array();
+        $failedWikiEpisodes = array();
 
-        end($source);
-        $lastKey = key($source);
-
-        $previous = null;
-        foreach($source as $key => $current) {
-            // Do not try to merge if the previous item does not exist or is unmergeable.
-            if($previous == null) {
-                $previous = $current;
-
-                // In case of the last element, the loop will not continue, so the current key has to be saved now.
-                if($key == $lastKey) {
-                    $result[] = $current;
+        foreach($wikiEpisodes as $wiki) {
+            foreach($files as $fileKey => $file) {
+                $mergedEpisode = $helper->mergeItems($file, $wiki);
+                if($mergedEpisode) {
+                    $date = $wiki->getDate()->format("Y-m-d");
+                    $mergedList[$date] = $mergedEpisode;
+                    break;
                 }
-                continue;
             }
 
-            $merged = $helper->mergeItems($previous, $current);
-            // If merge succeeds, save merged result.
-            // The current is already saved in the merged element, so it will not qualify as a next previous item.
-            if($merged !== false) {
-                $result[] = $merged;
-                $previous = null;
-                // Force continue as the last key check would cause the merged element to be saved if it's the last element.
-                continue;
+            // Remove merged FileData from the list. (In the end, the reminder of the files will be the unmergeable set of FileData).
+            if($mergedEpisode) {
+                unset($files[$fileKey]);
             }
-            // Merge failed, so the previous has to saved without being merged and the current element qualifies as the next previous element.
+            // Add failed WikiEpisode to the fail list for later processing.
             else {
-                $result[] = $previous;
-                $previous = $current;
-            }
-
-            // In case of the last element, the loop will not continue, so the current key has to be saved now.
-            if($key == $lastKey) {
-                $result[] = $current;
+                $failedWikiEpisodes[] = $wiki;
             }
         }
 
-        return $result;
+        // Add failed WikiEpisodes to the merged list as partials.
+        foreach($failedWikiEpisodes as $wiki) {
+            $partial = new MergedEpisode(null, $wiki);
+            $date = $wiki->getDate()->format("Y-m-d");
+            $mergedList[$date] = $partial;
+        }
+
+        // Add failed FileData to the merged list as partials.
+        foreach($files as $file) {
+            $partial = new MergedEpisode($file, null);
+            $date = $file->getDate()->format("Y-m-d");
+            $mergedList[$date] = $partial;
+        }
+
+        return $mergedList;
     }
 } 
