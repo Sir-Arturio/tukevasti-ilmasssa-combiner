@@ -68,25 +68,44 @@ class Mp3WriterTest extends PHPUnit_Framework_TestCase
     {
         return array(
           array(
-            array(
-              '20060124_tukevasti_ilmassa.mp3',
-              '2006-01-24',
-              '2006-01-23',
+            new MergedEpisode(
+              new FileData(
+                '20060124_tukevasti_ilmassa.mp3', new \DateTime('2006-01-24')
+              ),
+              null
             ),
-            '2006-01-23 - Tukevasti Ilmassa',
-            'Items without a title field return "<wikiDate> - Tukevasti Ilmassa" as a title.',
+            '2006-01-24 - Tukevasti Ilmassa',
+            'Items without WikiData return "<fileDate> - Tukevasti Ilmassa" as a title.',
           ),
           array(
-            array(
-              '20060124_tukevasti_ilmassa.mp3',
-              '2006-01-24',
-              '2006-01-23',
-              'Title',
-              'Test',
-              'J. Relander ja T. Nevanlinna',
+            new MergedEpisode(
+              new FileData(
+                '20060124_tukevasti_ilmassa.mp3', new \DateTime('2006-01-24')
+              ),
+              new WikiEpisodeInfo(
+                new \DateTime('2006-01-23'),
+                'Title',
+                'Test',
+                'J. Relander ja T. Nevanlinna'
+              )
             ),
             '2006-01-23 - Title',
-            'Items with a title field return "<wikiDate> - <title>" as a title.',
+            'Items with WikiData and title field return "<wikiDate> - <title>" as a title.',
+          ),
+          array(
+            new MergedEpisode(
+              new FileData(
+                '20060124_tukevasti_ilmassa.mp3', new \DateTime('2006-01-24')
+              ),
+              new WikiEpisodeInfo(
+                new \DateTime('2006-01-23'),
+                null,
+                'Test',
+                'J. Relander ja T. Nevanlinna'
+              )
+            ),
+            '2006-01-23 - Tukevasti Ilmassa',
+            'Items with WikiData but without a title field return "<wikiDate> - Tukevasti Ilmassa" as a title.',
           ),
         );
     }

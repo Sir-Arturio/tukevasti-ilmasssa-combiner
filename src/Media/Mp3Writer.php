@@ -76,15 +76,20 @@ class Mp3Writer
 
     /**
      * Format title data based on the item.
+     * Returns <wikiDate> - <Title> if WikiEpisodeInfo available.
+     * Returns <wikiDate> - Tukevasti Ilmassa if WikiEpisodeInfo available but title not present.
+     * Returns <fileDate> - Tukevasti Ilmassa if WikiEpisodeInfo NOT available.
      *
-     * @param array $item
+     * @param MergedEpisode $item
      * @return string
      */
-    public function getTitleData(array $item)
+    public function getTitleData(MergedEpisode $item)
     {
         $title = array();
-        $title[] = isset($item[2]) ? $item[2] : NULL;
-        $title[] = isset($item[3]) ? $item[3] : "Tukevasti Ilmassa";
+        $file = $item->getFileData();
+        $wiki = $item->getWikiEpisodeInfo();
+        $title[] = $wiki ? $wiki->getDate()->format("Y-m-d") : $file->getDate()->format("Y-m-d");
+        $title[] = $wiki && $wiki->getTitle() ? $wiki->getTitle() : "Tukevasti Ilmassa";
         return implode(' - ', $title);
     }
 } 
