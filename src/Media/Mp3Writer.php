@@ -26,15 +26,19 @@ class Mp3Writer
      */
     public function writeInfoToFile(MergedEpisode $episode)
     {
-        if(!isset($episode[0])) {
+        // Do not try to write Id3 tags if file data is not present.
+        $fileData = $episode->getFileData();
+        if(!$fileData) {
             return FALSE;
         }
+
+        // Populate data
         $artist = $this->getArtistData($episode);
         $title = $this->getTitleData($episode);
 
         // Remove ID3v1 tags.
         try {
-            $id3v1 = new \Zend_Media_Id3v1($episode[0]);
+            $id3v1 = new \Zend_Media_Id3v1($fileData->getFileName());
             $id3v1->setArtist("");
             $id3v1->setTitle("");
             $id3v1->write();
@@ -52,7 +56,7 @@ class Mp3Writer
         $artistFrame->setText($artist);
         $id3->addFrame($artistFrame);
 
-        $id3->write($episode[0]);
+        $id3->write($fileData->getFileName());
     }
 
     /**
