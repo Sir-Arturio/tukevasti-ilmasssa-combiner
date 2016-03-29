@@ -32,7 +32,7 @@ class RunCommand extends Command
         $combiner = new WikiFileCombiner();
         $mergedEpisodes = $combiner->combine($wikiData, $files, new MergeHelper());
 
-        //read_tags_and_combine_to_csv($mergedEpisodes);
+        read_tags_and_combine_to_csv($mergedEpisodes);
 
         $fileWriter = new Mp3Writer();
         $fileWriter->writeData($mergedEpisodes);
