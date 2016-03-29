@@ -51,6 +51,16 @@ class Mp3WriterTest extends PHPUnit_Framework_TestCase
             'Tukevasti Ilmassa/J. Relander ja T. Nevanlinna',
             'Episodes with a presenter field will return "Tukevasti Ilmassa/<artists>" as an artist.',
           ),
+          array(
+            new MergedEpisode(
+              new FileData(
+                '20060124_tukevasti_ilmassa.mp3', new \DateTime('2006-01-24')
+              ),
+              null
+            ),
+            'Tukevasti Ilmassa',
+            'Episodes without WikiData will return "Tukevasti Ilmassa" as an artist.',
+          ),
         );
     }
 

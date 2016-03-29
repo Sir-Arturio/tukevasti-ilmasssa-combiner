@@ -61,7 +61,7 @@ class Mp3Writer
 
     /**
      * Format artist data based on the episode.
-     * Returns either Tukevasti Ilmassa or Tukevasti Ilmassa/<presenters> (if presenters available).
+     * Returns either Tukevasti Ilmassa or Tukevasti Ilmassa/<presenters> (if presenters and WikiEpisodeInfo available).
      *
      * @param MergedEpisode $episode
      * @return string
@@ -70,7 +70,10 @@ class Mp3Writer
     {
         $artist = array();
         $artist[] = "Tukevasti Ilmassa";
-        $presenters = $episode->getWikiEpisodeInfo()->getPresenters();
+
+        // Populate presenters if available.
+        $wiki = $episode->getWikiEpisodeInfo();
+        $presenters = $wiki ? $wiki->getPresenters() : null;
         if ($presenters) {
             $artist[] = $presenters;
         }
