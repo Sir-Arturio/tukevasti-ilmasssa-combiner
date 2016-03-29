@@ -10,16 +10,16 @@ use TukevastiIlmassaDataCombiner\Wiki\WikiEpisodeInfo;
 class Mp3WriterTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider artistItemProvider
+     * @dataProvider artistEpisodeProvider
      */
-    public function testGetArtistData($item, $expected, $message)
+    public function testGetArtistData($episode, $expected, $message)
     {
         $writer = new Mp3Writer();
-        $result = $writer->getArtistData($item);
+        $result = $writer->getArtistData($episode);
         $this->assertEquals($expected, $result, $message);
     }
 
-    public function artistItemProvider()
+    public function artistEpisodeProvider()
     {
         return array(
           array(
@@ -34,7 +34,7 @@ class Mp3WriterTest extends PHPUnit_Framework_TestCase
               )
             ),
             'Tukevasti Ilmassa',
-            'Items without presenter field return "Tukevasti Ilmassa" as an artist.',
+            'Episodes without presenter field return "Tukevasti Ilmassa" as an artist.',
           ),
           array(
             new MergedEpisode(
@@ -49,22 +49,22 @@ class Mp3WriterTest extends PHPUnit_Framework_TestCase
               )
             ),
             'Tukevasti Ilmassa/J. Relander ja T. Nevanlinna',
-            'Items with a presenter field will return "Tukevasti Ilmassa/<artists>" as an artist.',
+            'Episodes with a presenter field will return "Tukevasti Ilmassa/<artists>" as an artist.',
           ),
         );
     }
 
     /**
-     * @dataProvider titleItemProvider
+     * @dataProvider titleEpisodeProvider
      */
-    public function testGetTitleData($item, $expected, $message)
+    public function testGetTitleData($episode, $expected, $message)
     {
         $writer = new Mp3Writer();
-        $result = $writer->getTitleData($item);
+        $result = $writer->getTitleData($episode);
         $this->assertEquals($expected, $result, $message);
     }
 
-    public function titleItemProvider()
+    public function titleEpisodeProvider()
     {
         return array(
           array(
@@ -75,7 +75,7 @@ class Mp3WriterTest extends PHPUnit_Framework_TestCase
               null
             ),
             '2006-01-24 - Tukevasti Ilmassa',
-            'Items without WikiData return "<fileDate> - Tukevasti Ilmassa" as a title.',
+            'Episodes without WikiData return "<fileDate> - Tukevasti Ilmassa" as a title.',
           ),
           array(
             new MergedEpisode(
@@ -90,7 +90,7 @@ class Mp3WriterTest extends PHPUnit_Framework_TestCase
               )
             ),
             '2006-01-23 - Title',
-            'Items with WikiData and title field return "<wikiDate> - <title>" as a title.',
+            'Episodes with WikiData and title field return "<wikiDate> - <title>" as a title.',
           ),
           array(
             new MergedEpisode(
@@ -105,7 +105,7 @@ class Mp3WriterTest extends PHPUnit_Framework_TestCase
               )
             ),
             '2006-01-23 - Tukevasti Ilmassa',
-            'Items with WikiData but without a title field return "<wikiDate> - Tukevasti Ilmassa" as a title.',
+            'Episodes with WikiData but without a title field return "<wikiDate> - Tukevasti Ilmassa" as a title.',
           ),
         );
     }
