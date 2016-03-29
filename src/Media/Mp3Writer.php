@@ -2,9 +2,16 @@
 
 namespace TukevastiIlmassaDataCombiner\Media;
 
+use TukevastiIlmassaDataCombiner\Combiner\MergedEpisode;
+
 class Mp3Writer
 {
-    public function writeData($items)
+    /**
+     * Write merged episode data back to MP3 files.
+     *
+     * @param MergedEpisode[] $items
+     */
+    public function writeData(array $items)
     {
         foreach ($items as $item) {
             $this->writeInfoToFile($item);
@@ -14,10 +21,10 @@ class Mp3Writer
     /**
      * Write item's information to the designated file.
      *
-     * @param array $item
+     * @param MergedEpisode $item
      * @throws \Zend_Media_Id3_Exception
      */
-    public function writeInfoToFile(array $item)
+    public function writeInfoToFile(MergedEpisode $item)
     {
         if(!isset($item[0])) {
             return FALSE;
@@ -50,16 +57,18 @@ class Mp3Writer
 
     /**
      * Format artist data based on the item.
+     * Returns either Tukevasti Ilmassa or Tukevasti Ilmassa/<presenters> (if presenters available).
      *
-     * @param array $item
+     * @param MergedEpisode $item
      * @return string
      */
-    public function getArtistData(array $item)
+    public function getArtistData(MergedEpisode $item)
     {
         $artist = array();
         $artist[] = "Tukevasti Ilmassa";
-        if (isset($item[5])) {
-            $artist[] = $item[5];
+        $presenters = $item->getWikiEpisodeInfo()->getPresenters();
+        if ($presenters) {
+            $artist[] = $presenters;
         }
 
         return implode('/', $artist);

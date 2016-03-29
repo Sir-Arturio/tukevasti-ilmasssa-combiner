@@ -3,6 +3,9 @@
 namespace TukevastiIlmassaDataCombiner\Media;
 
 use PHPUnit_Framework_TestCase;
+use TukevastiIlmassaDataCombiner\Combiner\MergedEpisode;
+use TukevastiIlmassaDataCombiner\File\FileData;
+use TukevastiIlmassaDataCombiner\Wiki\WikiEpisodeInfo;
 
 class Mp3WriterTest extends PHPUnit_Framework_TestCase
 {
@@ -20,27 +23,33 @@ class Mp3WriterTest extends PHPUnit_Framework_TestCase
     {
         return array(
           array(
-            array(
-              '20060124_tukevasti_ilmassa.mp3',
-              '2006-01-24',
-              '2006-01-23',
-              'Title',
-              'Test',
+            new MergedEpisode(
+              new FileData(
+                '20060124_tukevasti_ilmassa.mp3', new \DateTime('2006-01-24')
+              ),
+              new WikiEpisodeInfo(
+                new \DateTime('2006-01-23'),
+                'Title',
+                'Test'
+              )
             ),
             'Tukevasti Ilmassa',
-            'Items without an artist field return "Tukevasti Ilmassa" as an artist.',
+            'Items without presenter field return "Tukevasti Ilmassa" as an artist.',
           ),
           array(
-            array(
-              '20060124_tukevasti_ilmassa.mp3',
-              '2006-01-24',
-              '2006-01-23',
-              'Title',
-              'Test',
-              'J. Relander ja T. Nevanlinna',
+            new MergedEpisode(
+              new FileData(
+                '20060124_tukevasti_ilmassa.mp3', new \DateTime('2006-01-24')
+              ),
+              new WikiEpisodeInfo(
+                new \DateTime('2006-01-23'),
+                'Title',
+                'Test',
+                'J. Relander ja T. Nevanlinna'
+              )
             ),
             'Tukevasti Ilmassa/J. Relander ja T. Nevanlinna',
-            'Items with an artist field will return "Tukevasti Ilmassa/<artists>" as an artist.',
+            'Items with a presenter field will return "Tukevasti Ilmassa/<artists>" as an artist.',
           ),
         );
     }
